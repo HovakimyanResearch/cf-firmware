@@ -50,6 +50,7 @@
 #include "uart2.h"
 #include "comm.h"
 #include "stabilizer.h"
+#include "manipulator.h"
 #include "commander.h"
 #include "console.h"
 #include "usblink.h"
@@ -179,6 +180,7 @@ void systemTask(void *arg)
   commInit();
   commanderInit();
   stabilizerInit();
+  manipulatorInit();
 #ifdef PLATFORM_CF2
   deckInit();
   #endif

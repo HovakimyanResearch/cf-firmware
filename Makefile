@@ -160,6 +160,8 @@ PROJ_OBJ += position_estimator_altitude.o position_controller_pid.o
 PROJ_OBJ += estimator_$(ESTIMATOR).o controller_$(CONTROLLER).o
 PROJ_OBJ += sensors_$(SENSORS).o power_distribution_$(POWER_DISTRIBUTION).o
 
+# Manipulator modules
+PROJ_OBJ += manipulator.o
 
 # Deck Core
 PROJ_OBJ_CF2 += deck.o deck_info.o deck_drivers.o deck_test.o
