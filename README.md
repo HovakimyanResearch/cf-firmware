@@ -1,8 +1,8 @@
-# ACRL firmware  [![Build Status](https://api.travis-ci.org/HovakimyanResearch/cf-firmware.svg)](https://travis-ci.org/HovakimyanResearch/cf-firmware)
+# ACRL cf-firmware  [![Build Status](https://api.travis-ci.org/HovakimyanResearch/cf-firmware.svg)](https://travis-ci.org/HovakimyanResearch/cf-firmware)
 
 <!--TODO (arunl)-->
 
-This project contains the source code for the Crazyflie 1.0/2.0 firmware.
+This project contains the source code for the ACRL  cf-firmware.
 
 ## Dependencies
 
