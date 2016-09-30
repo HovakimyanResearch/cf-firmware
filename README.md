@@ -1,11 +1,13 @@
-# Crazyflie 1.0/2.0 Firmware  [![Build Status](https://api.travis-ci.org/bitcraze/crazyflie-firmware.svg)](https://travis-ci.org/bitcraze/crazyflie-firmware)
+# ACRL firmware  [![Build Status](https://api.travis-ci.org/HovakimyanResearch/cf-firmware.svg)](https://travis-ci.org/HovakimyanResearch/cf-firmware)
 
-This project contains the source code for the Crazyflie 1.0/2.0 firmware. 
+<!--TODO (arunl)-->
+
+This project contains the source code for the Crazyflie 1.0/2.0 firmware.
 
 ## Dependencies
 
 You'll need to use either the [Crazyflie VM](https://wiki.bitcraze.io/projects:virtualmachine:index),
-[the toolbelt](https://wiki.bitcraze.io/projects:dockerbuilderimage:index) or 
+[the toolbelt](https://wiki.bitcraze.io/projects:dockerbuilderimage:index) or
 install some ARM toolchain.
 
 ### Install a toolchain
@@ -81,14 +83,14 @@ tb make
 ```
 
 ### config.mk
-To create custom build options create a file called config.mk in the root folder 
-(same as Makefile) and fill it with options. E.g. 
+To create custom build options create a file called config.mk in the root folder
+(same as Makefile) and fill it with options. E.g.
 ```
 PLATFORM=CF1
 DEBUG=1
 CLOAD=0
 ```
-More information can be found on the 
+More information can be found on the
 [Bitcraze wiki](http://wiki.bitcraze.se/projects:crazyflie2:index)
 
 ## Folder description:
@@ -125,8 +127,8 @@ clean_o    : Clean only the Objects files, keep the executables (ie .elf, .hex)
 clean      : Clean every compiled files
 mrproper   : Clean every compiled files and the classical editors backup files
 
-cload      : If the crazyflie-clients-python is placed on the same directory level and 
-             the Crazyradio/Crazyradio PA is inserted it will try to flash the firmware 
+cload      : If the crazyflie-clients-python is placed on the same directory level and
+             the Crazyradio/Crazyradio PA is inserted it will try to flash the firmware
              using the wireless bootloader.
 flash      : Flash .elf using OpenOCD
 halt       : Halt the target using OpenOCD
@@ -140,16 +142,16 @@ openocd    : Launch OpenOCD
 
 Frameworks for unit testing are pulled in as git submodules.
 
-The testing framework uses ruby and rake to generate and run code. 
+The testing framework uses ruby and rake to generate and run code.
 
 To minimize the need for installations and configuration, use the docker builder
-image (bitcraze/builder) that contains all tools needed. All scripts in the 
-tools/build directory are intended to be run in the image. The 
+image (bitcraze/builder) that contains all tools needed. All scripts in the
+tools/build directory are intended to be run in the image. The
 [toolbelt](https://wiki.bitcraze.io/projects:dockerbuilderimage:index) makes it
 easy to run the tool scripts.
 
 ### Running unit tests
-    
+
 With the environment set up locally
 
         rake
