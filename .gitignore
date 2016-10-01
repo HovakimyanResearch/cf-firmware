@@ -11,8 +11,8 @@ cflie.*
 version.c
 tags
 
-/cf2.*
-/cf1.*
+/cf.*
+/q2.*
 *.gch
 
 /generated-test/**
