@@ -68,8 +68,10 @@ openocd    : Launch OpenOCD
 
 # Tips
 * Use `cload` to quickly flash the crazyflie:
+
    ```
    make VEH=Q2 && make cload
    ```
+
    Install [crazyflie-clients-python](https://github.com/bitcraze/crazyflie-clients-python.git)
    to use this feature.
