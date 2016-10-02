@@ -22,13 +22,13 @@ to find out how to install the toolchains.
 
 ### Crazyflie
 
-Build with:
+This is the dafault build so just running "make" is enough or:
 ```bash
 make VEH=CF
 ```
 ### Q2
 
-This is the dafault build so just running "make" is enough or:
+Build with:
 ```bash
 make VEH=Q2
 ```
