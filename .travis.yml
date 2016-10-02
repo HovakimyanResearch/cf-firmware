@@ -19,6 +19,7 @@ script:
   ###  Q2
 
   # Build Q2 basic
+  - docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build clean
   - docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build VEH=Q2
 
   # Build Q2 with "all" features enabled
