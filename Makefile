@@ -20,35 +20,35 @@ CLOAD             ?= 1
 DEBUG             ?= 0
 CLOAD_SCRIPT      ?= cfloader
 CLOAD_CMDS        ?=
-PLATFORM					?= CF2
+PLATFORM		  ?= CF2
+VEH               ?= CF
+
+######### Vehicle configuration ##########
+ifeq ($(VEH), CF)
+VEH_FLAGS = -DVEH_CF
+VEH_FLAGS += $(CF_CFLAGS)
+endif
+ifeq ($(VEH), Q2)
+VEH_FLAGS = -DVEH_Q2
+VEH_FLAGS += -DENABLE_BQ_DECK
+VEH_FLAGS += $(Q2_CFLAGS)
+endif
 
 ######### Stabilizer configuration ##########
 ##### Sets the name of the stabilizer module to use.
-SENSORS            ?= stock
 ESTIMATOR          ?= complementary
 CONTROLLER         ?= pid
 POWER_DISTRIBUTION ?= stock
 
 
-ifeq ($(PLATFORM), CF1)
-OPENOCD_TARGET    ?= target/stm32f1x_stlink.cfg
-USE_FPU            = 0
-endif
-ifeq ($(PLATFORM), CF2)
 OPENOCD_TARGET    ?= target/stm32f4x_stlink.cfg
 USE_FPU           ?= 1
-endif
 
 
-ifeq ($(PLATFORM), CF1)
-REV               ?= F
-endif
-ifeq ($(PLATFORM), CF2)
 # Now needed for SYSLINK
 CFLAGS += -DUSE_RADIOLINK_CRTP     # Set CRTP link to radio
 CFLAGS += -DENABLE_UART          # To enable the uart
 REV               ?= D
-endif
 
 #OpenOCD conf
 RTOS_DEBUG        ?= 0
@@ -61,25 +61,13 @@ else
 PORT = $(FREERTOS)/portable/GCC/ARM_CM3
 endif
 
-ifeq ($(PLATFORM), CF1)
-LINKER_DIR = tools/make/F103/linker
-ST_OBJ_DIR  = tools/make/F103
-endif
-ifeq ($(PLATFORM), CF2)
 LINKER_DIR = tools/make/F405/linker
 ST_OBJ_DIR  = tools/make/F405
-endif
 
 STLIB = src/lib
 
 ################ Build configuration ##################
 # St Lib
-VPATH_CF1 += $(STLIB)/CMSIS/Core/CM3
-VPATH_CF1 += $(STLIB)/CMSIS/Core/CM3/startup/gcc
-VPATH_CF1 += $(STLIB)/STM32_CPAL_Driver/src
-VPATH_CF1 += $(STLIB)/STM32_CPAL_Driver/devices/stm32f10x
-CRT0_CF1 = startup_stm32f10x_md.o system_stm32f10x.o
-
 VPATH_CF2 += $(STLIB)/CMSIS/STM32F4xx/Source/
 VPATH_CF2 += $(STLIB)/STM32_CPAL_Driver/src
 VPATH_CF2 += $(STLIB)/STM32_USB_Device_Library/Core/src
@@ -110,29 +98,19 @@ FREERTOS_OBJ = list.o tasks.o queue.o timers.o $(MEMMANG_OBJ)
 
 # Crazyflie sources
 VPATH += src/init src/hal/src src/modules/src src/utils/src src/drivers/src
-VPATH_CF1 += src/platform/cf1
 VPATH_CF2 += src/platform/cf2
 
-ifeq ($(PLATFORM), CF1)
-VPATH +=$(VPATH_CF1)
-endif
-ifeq ($(PLATFORM), CF2)
 VPATH +=$(VPATH_CF2)
-endif
 
 
 ############### Source files configuration ################
 
 # Init
 PROJ_OBJ += main.o
-PROJ_OBJ_CF1 += platform_cf1.o
 PROJ_OBJ_CF2 += platform_cf2.o
 
 # Drivers
 PROJ_OBJ += exti.o nvic.o motors.o
-PROJ_OBJ_CF1 += led_f103.o i2cdev_f103.o i2croutines.o adc_f103.o mpu6050.o
-PROJ_OBJ_CF1 += hmc5883l.o ms5611.o nrf24l01.o eeprom.o watchdog.o
-PROJ_OBJ_CF1 += eskylink.o
 PROJ_OBJ_CF2 += led_f405.o mpu6500.o i2cdev_f405.o ws2812_cf2.o lps25h.o i2c_drv.o
 PROJ_OBJ_CF2 += ak8963.o eeprom.o maxsonar.o piezo.o
 PROJ_OBJ_CF2 += uart_syslink.o swd.o uart1.o uart2.o watchdog.o
@@ -142,8 +120,7 @@ PROJ_OBJ_CF2 += usb_bsp.o usblink.o usbd_desc.o usb.o
 
 # Hal
 PROJ_OBJ += crtp.o ledseq.o freeRTOSdebug.o buzzer.o
-PROJ_OBJ_CF1 += imu_cf1.o pm_f103.o nrf24link.o ow_none.o uart.o
-PROJ_OBJ_CF2 += imu_cf2.o pm_f405.o syslink.o radiolink.o ow_syslink.o proximity.o usec_time.o
+PROJ_OBJ_CF2 += sensors_cf2.o pm_f405.o syslink.o radiolink.o ow_syslink.o proximity.o usec_time.o
 
 # libdw
 PROJ_OBJ_CF2 += libdw1000.o libdw1000Spi.o
@@ -151,14 +128,14 @@ PROJ_OBJ_CF2 += libdw1000.o libdw1000Spi.o
 # Modules
 PROJ_OBJ += system.o comm.o console.o pid.o crtpservice.o param.o mem.o
 PROJ_OBJ += log.o worker.o trigger.o sitaw.o queuemonitor.o
-PROJ_OBJ_CF1 += sound_cf1.o
 PROJ_OBJ_CF2 += platformservice.o sound_cf2.o extrx.o
 
 # Stabilizer modules
-PROJ_OBJ += commander.o attitude_pid_controller.o sensfusion6.o stabilizer.o
+PROJ_OBJ += commander.o ext_position.o
+PROJ_OBJ += attitude_pid_controller.o sensfusion6.o stabilizer.o
 PROJ_OBJ += position_estimator_altitude.o position_controller_pid.o
 PROJ_OBJ += estimator_$(ESTIMATOR).o controller_$(CONTROLLER).o
-PROJ_OBJ += sensors_$(SENSORS).o power_distribution_$(POWER_DISTRIBUTION).o
+PROJ_OBJ += power_distribution_$(POWER_DISTRIBUTION).o
 
 # Manipulator modules
 PROJ_OBJ += manipulator.o
@@ -188,19 +165,13 @@ PROJ_OBJ_CF2 += exptest.o
 # Utilities
 PROJ_OBJ += filter.o cpuid.o cfassert.o  eprintf.o crc.o num.o debug.o
 PROJ_OBJ += version.o FreeRTOS-openocd.o
-PROJ_OBJ_CF1 += configblockflash.o
 PROJ_OBJ_CF2 += configblockeeprom.o
 
 # Libs
 PROJ_OBJ_CF2 += libarm_math.a
 
 OBJ = $(FREERTOS_OBJ) $(PORT_OBJ) $(ST_OBJ) $(PROJ_OBJ)
-ifeq ($(PLATFORM), CF1)
-OBJ += $(CRT0_CF1) $(ST_OBJ_CF1) $(PROJ_OBJ_CF1)
-endif
-ifeq ($(PLATFORM), CF2)
 OBJ += $(CRT0_CF2) $(ST_OBJ_CF2) $(PROJ_OBJ_CF2)
-endif
 
 ifdef P
   C_PROFILE = -D P_$(P)
@@ -219,11 +190,6 @@ INCLUDES += -Isrc/config -Isrc/hal/interface -Isrc/modules/interface
 INCLUDES += -Isrc/utils/interface -Isrc/drivers/interface -Isrc/platform
 INCLUDES += -Ivendor/CMSIS/CMSIS/Include
 
-INCLUDES_CF1 += -I$(STLIB)/STM32F10x_StdPeriph_Driver/inc
-INCLUDES_CF1 += -I$(STLIB)/CMSIS/Core/CM3
-INCLUDES_CF1 += -I$(STLIB)/STM32_CPAL_Driver/inc
-INCLUDES_CF1 += -I$(STLIB)/STM32_CPAL_Driver/devices/stm32f10x
-
 INCLUDES_CF2 += -I$(STLIB)/STM32F4xx_StdPeriph_Driver/inc
 INCLUDES_CF2 += -I$(STLIB)/CMSIS/STM32F4xx/Include
 INCLUDES_CF2 += -I$(STLIB)/STM32_CPAL_Driver/inc
@@ -237,16 +203,10 @@ ifeq ($(USE_FPU), 1)
 	PROCESSOR = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 	CFLAGS += -fno-math-errno -DARM_MATH_CM4 -D__FPU_PRESENT=1 -D__TARGET_FPU_VFP
 else
-	ifeq ($(PLATFORM), CF1)
-		PROCESSOR = -mcpu=cortex-m3 -mthumb
-	endif
-	ifeq ($(PLATFORM), CF2)
-		PROCESSOR = -mcpu=cortex-m4 -mthumb
-	endif
+	PROCESSOR = -mcpu=cortex-m4 -mthumb
 endif
 
 #Flags required by the ST library
-STFLAGS_CF1 = -DSTM32F10X_MD -DHSE_VALUE=16000000 -include stm32f10x_conf.h -DPLATFORM_CF1
 STFLAGS_CF2 = -DSTM32F4XX -DSTM32F40_41xxx -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER -DPLATFORM_CF2
 
 ifeq ($(DEBUG), 1)
@@ -263,15 +223,11 @@ ifeq ($(USE_ESKYLINK), 1)
   CFLAGS += -DUSE_ESKYLINK
 endif
 
-CFLAGS += -DBOARD_REV_$(REV) -DSENSORS_TYPE_$(SENSORS) -DESTIMATOR_TYPE_$(ESTIMATOR) -DCONTROLLER_TYPE_$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
+CFLAGS += -DBOARD_REV_$(REV) -DESTIMATOR_TYPE_$(ESTIMATOR) -DCONTROLLER_TYPE_$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
 
 CFLAGS += $(PROCESSOR) $(INCLUDES) $(STFLAGS)
-ifeq ($(PLATFORM), CF1)
-CFLAGS += $(INCLUDES_CF1) $(STFLAGS_CF1)
-endif
-ifeq ($(PLATFORM), CF2)
 CFLAGS += $(INCLUDES_CF2) $(STFLAGS_CF2)
-endif
+CFLAGS += $(VEH_FLAGS)
 
 CFLAGS += -Wall -Wmissing-braces -fno-strict-aliasing $(C_PROFILE) -std=gnu11
 # Compiler flags to generate dependency files:
@@ -299,11 +255,13 @@ ifeq ($(LTO), 1)
 endif
 
 #Program name
-ifeq ($(PLATFORM), CF1)
-PROG = cf1
-else
-PROG = cf2
+ifeq ($(VEH), CF)
+PROG = cf
 endif
+ifeq ($(VEH), Q2)
+PROG = q2
+endif
+
 #Where to compile the .o
 BIN = bin
 VPATH += $(BIN)
@@ -335,11 +293,11 @@ ifeq ($(SHELL),/bin/sh)
 endif
 
 print_version: compile
-ifeq ($(PLATFORM), CF1)
-	@echo "Crazyflie Nano (1.0) build!"
+ifeq ($(VEH), CF)
+	@echo "Crazyflie build!"
 endif
-ifeq ($(PLATFORM), CF2)
-	@echo "Crazyflie 2.0 build!"
+ifeq ($(VEH), Q2)
+	@echo "Q2 build!"
 endif
 	@$(PYTHON2) tools/make/versionTemplate.py --print-version
 ifeq ($(CLOAD), 1)

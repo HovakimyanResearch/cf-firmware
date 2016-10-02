@@ -9,9 +9,10 @@ bin/*
 tools/make/config.mk
 cflie.*
 version.c
+tags
 
-/cf2.*
-/cf1.*
+/cf.*
+/q2.*
 *.gch
 
 /generated-test/**
