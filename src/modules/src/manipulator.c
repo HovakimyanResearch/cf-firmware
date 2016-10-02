@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 #include <math.h>
 
@@ -35,7 +35,7 @@
 #include "manipulator.h"
 
 #include "string.h"
-#include "uart1.h"
+#include "uart2.h"
 
 static bool isInit;
 
@@ -46,20 +46,49 @@ void manipulatorInit(void)
   if(isInit)
     return;
 
+  uart2Init(9600);
   xTaskCreate(manipulatorTask, MANIPULATOR_TASK_NAME,
               MANIPULATOR_TASK_STACKSIZE, NULL, MANIPULATOR_TASK_PRI, NULL);
 
   isInit = true;
 }
 
+
+void maestro_set_acceleration(unsigned short device_number,
+    unsigned char channel, unsigned short target)
+{
+  maestro_uart_protocol(device_number);
+  uart2Putchar(0x09);
+  uart2Putchar(channel);
+  maestro_send_data(target);
+}
+
+void maestro_set_target(unsigned short device_number,
+    unsigned char channel, unsigned short target)
+{
+  maestro_uart_protocol(device_number);
+  uart2Putchar(0x09);
+  uart2Putchar(channel);
+  maestro_send_data(target);
+}
+
+void maestro_uart_protocol(unsigned short device_number)
+{
+  uart2Putchar(0xAA);
+  uart2Putchar(device_number & 0x07F);
+}
+
+void maestro_send_data(unsigned short target)
+{
+  uart2Putchar(target & 0x7F);
+  uart2Putchar(target >> 7 & 0x7F);
+}
+
 static void manipulatorTask(void* param)
 {
   uint32_t tick = 0;
   uint32_t lastWakeTime;
-  char text[] = "HELP";
-  uint8_t m[32];
-  memcpy(m, text, sizeof(&m));
-  uart1Init(9600);
+
   vTaskSetApplicationTaskTag(0, (void*)TASK_MANIPULATOR_ID_NBR);
 
   //Wait for the system to be fully started to start manipulation loop
@@ -68,13 +97,21 @@ static void manipulatorTask(void* param)
   // Wait for sensors to be calibrated
   lastWakeTime = xTaskGetTickCount ();
 
+  int target0, target1 = 6000;
+
+  //maestro_set_acceleration(12, 0, 4);
+  //maestro_set_acceleration(12, 1, 4);
 
   while(1) {
     vTaskDelayUntil(&lastWakeTime, F2T(RATE_MANIPULATOR_LOOP));
 
+    target0 = (int)(1000.0*sin(5.0*(double)tick/100.0f)+6000.0);
+    target1 = (int)(1000.0*sin(5.0*(double)tick/100.0f)+6000.0);
+
+    maestro_set_target(12, 0, target0);
+    maestro_set_target(12, 1, target1);
 
     tick++;
-    uart1SendData(sizeof(&m), m);
   }
 }
 

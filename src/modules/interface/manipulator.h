@@ -33,5 +33,12 @@
 
 void manipulatorInit(void);
 
+void meastro_set_acceleration(unsigned short device_number, unsigned char channel, unsigned short target);
+
+void meastro_set_target(unsigned short device_number, unsigned char channel, unsigned short target);
+
+void maestro_uart_protocol(unsigned short device_number);
+
+void maestro_send_data(unsigned short target);
 
 #endif /* MANIPULATOR_H_ */
