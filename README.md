@@ -8,6 +8,15 @@ If you are a contributor to this code. Please see
 [this](https://github.com/HovakimyanResearch/cf-firmware/wiki/Workflow)
 for how the workflow should be organized and pull requests created.
 
+#### General coding guidelines
+* Make sure you use spaces (convert your tab characters to 2 spaces). *[One
+  indent = 2 spaces]*. This is easy to set up in sublime, notepad++ or vim.
+* Please make sure that there are not trailing whitespaces in your files. You
+  can configure you editor to set this.
+  * Vim: `autocmd BufWritePre * %s/\s\+$//e` to your `.vimrc`
+  * Sublime: (This)[http://nategood.com/sublime-text-strip-whitespace-save]
+  * Notepad++: `Alt+Shift+S`
+
 ## Dependencies and Installation
 
 You'll need to use either the [Crazyflie VM](https://wiki.bitcraze.io/projects:virtualmachine:index),
