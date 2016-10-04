@@ -33,29 +33,30 @@ to find out how to install the toolchains.
 
 This is the dafault build so just running "make" is enough or:
 ```bash
-make VEH=CF
+make VEH=cf
 ```
 ### Q2
 
 Build with:
 ```bash
-make VEH=Q2
+make VEH=q2
+```
+### Bitcrze original
+
+Build with:
+```bash
+make VEH=bitcraze
 ```
 
-### config.mk
-To create custom build options create a file called config.mk in `tools/make`
-and fill it with options. E.g.
-```
-# Q2 Flags
-Q2_CFLAGS += -DENABLE_Q2_ARM
-Q2_CFLAGS += -DSE3_COMPLEMENTARY_FILTER
+### Vehicle Configuration
+To create custom build for a vehcile you need to create a folder with the name
+of the vehile (eg: `q2_manip`) in the `configs` folder. You will need to
+include the following files in this folder:
+* `config.mk` : Vehicle specific flags
+* `vehicle_params.h` : Controller params
 
-# CF Flags
-CF_CFLAGS += -DENABLE_L1
-```
 These flags get imported as macros during complilation based on the vehicle
-selected. All available flags and their descriptions can be found in
-`tools/make/config.mk.example`.
+selected.
 
 # Make targets:
 ```

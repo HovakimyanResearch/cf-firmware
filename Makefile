@@ -5,8 +5,6 @@
 
 # Put your personal build config in tools/make/config.mk and DO NOT COMMIT IT!
 # Make a copy of tools/make/config.mk.example to get you started
--include tools/make/config.mk
-
 CFLAGS += $(EXTRA_CFLAGS)
 
 ######### JTAG and environment configuration ##########
@@ -20,19 +18,11 @@ CLOAD             ?= 1
 DEBUG             ?= 0
 CLOAD_SCRIPT      ?= cfloader
 CLOAD_CMDS        ?=
-PLATFORM		  ?= CF2
-VEH               ?= CF
+PLATFORM          ?= CF2
+VEH               ?= cf
 
 ######### Vehicle configuration ##########
-ifeq ($(VEH), CF)
-VEH_FLAGS = -DVEH_CF
-VEH_FLAGS += $(CF_CFLAGS)
-endif
-ifeq ($(VEH), Q2)
-VEH_FLAGS = -DVEH_Q2
-VEH_FLAGS += -DENABLE_BQ_DECK
-VEH_FLAGS += $(Q2_CFLAGS)
-endif
+include configs/$(VEH)/config.mk
 
 ######### Stabilizer configuration ##########
 ##### Sets the name of the stabilizer module to use.
@@ -197,6 +187,8 @@ INCLUDES_CF2 += -I$(STLIB)/STM32_USB_OTG_Driver/inc
 INCLUDES_CF2 += -Isrc/deck/interface -Isrc/deck/drivers/interface
 INCLUDES_CF2 += -Ivendor/libdw1000/inc
 
+INCLUDES += -Iconfigs/$(VEH)
+
 ifeq ($(USE_FPU), 1)
 	PROCESSOR = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 	CFLAGS += -fno-math-errno -DARM_MATH_CM4 -D__FPU_PRESENT=1 -D__TARGET_FPU_VFP
@@ -253,12 +245,7 @@ ifeq ($(LTO), 1)
 endif
 
 #Program name
-ifeq ($(VEH), CF)
-PROG = cf
-endif
-ifeq ($(VEH), Q2)
-PROG = q2
-endif
+PROG = $(VEH)
 
 #Where to compile the .o
 BIN = bin
@@ -291,12 +278,7 @@ ifeq ($(SHELL),/bin/sh)
 endif
 
 print_version: compile
-ifeq ($(VEH), CF)
-	@echo "Crazyflie build!"
-endif
-ifeq ($(VEH), Q2)
-	@echo "Q2 build!"
-endif
+	@echo "$(VEH) build!"
 	@$(PYTHON2) tools/make/versionTemplate.py --print-version
 ifeq ($(CLOAD), 1)
 	@echo "Crazyloader build!"

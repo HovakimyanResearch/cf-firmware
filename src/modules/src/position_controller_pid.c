@@ -59,7 +59,7 @@ struct this_s {
 };
 
 // Maximum roll/pitch angle permited
-static float rpLimit = 20;
+static float rpLimit = MAX_ROLL_PITCH_ANGLE;
 
 #define DT 0.01
 
@@ -68,32 +68,32 @@ static struct this_s this = {
 
   .pidX = {
     .init = {
-      .kp = 25,
-      .ki = 0.28,
-      .kd = 7
+      .kp = PID_X_KP,
+      .ki = PID_X_KI,
+      .kd = PID_X_KD
     },
     .pid.dt = DT,
   },
 
   .pidY = {
     .init = {
-      .kp = 25,
-      .ki = 0.28,
-      .kd = 7
+      .kp = PID_Y_KP,
+      .ki = PID_Y_KI,
+      .kd = PID_Y_KD
     },
     .pid.dt = DT,
   },
 
   .pidZ = {
     .init = {
-      .kp = 30000.0,
-      .ki = 5000,
-      .kd = 10000.0
+      .kp = PID_Z_KP,
+      .ki = PID_Z_KI,
+      .kd = PID_Z_KD
     },
     .pid.dt = DT,
   },
 
-  .thrustBase = 36000,
+  .thrustBase = THRUST_BASE,
 };
 #endif
 

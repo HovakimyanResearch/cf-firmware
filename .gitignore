@@ -11,8 +11,12 @@ cflie.*
 version.c
 tags
 
-/cf.*
-/q2.*
+*.bin
+*.dfu
+*.elf
+*.hex
+*.map
+
 *.gch
 
 /generated-test/**
