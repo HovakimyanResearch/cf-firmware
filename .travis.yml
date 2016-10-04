@@ -33,3 +33,12 @@ script:
   # Build Q2 with manipulator
   - docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build clean
   - docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build VEH=Q2 DEBUG=1 "EXTRA_CFLAGS=-DENABLE_Q2_ARM"
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+  slack:
+    slack: irl-uiuc:ITyhS3YwmFkqtup3WOvsBfuR
+    on_success: never
+    on_failure: change
