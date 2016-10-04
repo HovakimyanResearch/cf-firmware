@@ -29,7 +29,7 @@
 
 #include <stdbool.h>
 
-#if defined(PLATFORM_CF2)
+#if defined(VEH_CF)
 
 #define PID_ROLL_RATE_KP  250.0
 #define PID_ROLL_RATE_KI  500.0
@@ -64,7 +64,7 @@
 
 #define DEFAULT_PID_INTEGRATION_LIMIT  5000.0
 
-#elif defined(ENABLE_BQ_DECK)
+#elif defined(VEH_Q2)
 
 #define PID_ROLL_RATE_KP  50.0
 #define PID_ROLL_RATE_KI  5.0
