@@ -118,6 +118,12 @@ LOG_ADD(LOG_FLOAT, pitch, &attitudeDesired.pitch)
 LOG_ADD(LOG_FLOAT, yaw, &attitudeDesired.yaw)
 LOG_GROUP_STOP(controller)
 
+LOG_GROUP_START(controller_rate)
+LOG_ADD(LOG_FLOAT, roll, &rateDesired.roll)
+LOG_ADD(LOG_FLOAT, pitch, &rateDesired.pitch)
+LOG_ADD(LOG_FLOAT, yaw, &rateDesired.yaw)
+LOG_GROUP_STOP(controller_rate)
+
 PARAM_GROUP_START(controller)
 PARAM_ADD(PARAM_UINT8, tiltComp, &tiltCompensationEnabled)
 PARAM_GROUP_STOP(controller)
