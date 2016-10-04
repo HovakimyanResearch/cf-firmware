@@ -96,7 +96,7 @@ void stateController(control_t *control, const sensorData_t *sensors,
     control->thrust = actuatorThrust;
   }
 
-  if (control->thrust == 0)
+  if (control->thrust <= 0)
   {
     control->thrust = 0;
     control->roll = 0;
