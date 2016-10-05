@@ -27,6 +27,7 @@
 #define _EXT_POSITION_H_
 
 #include "stabilizer_types.h"
+#include "vehicle_params.h"
 
 /**
  * CRTP external position data struct

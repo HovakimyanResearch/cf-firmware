@@ -78,7 +78,7 @@ bool getExtPosition(state_t *state)
     ext_pos.x = crtpExtPosCache.targetVal[crtpExtPosCache.activeSide].x;
     ext_pos.y = crtpExtPosCache.targetVal[crtpExtPosCache.activeSide].y;
     ext_pos.z = crtpExtPosCache.targetVal[crtpExtPosCache.activeSide].z;
-    ext_pos.stdDev = 0.01;
+    ext_pos.stdDev = EXT_MEAS_STD_DEV;
 #ifdef ESTIMATOR_TYPE_kalman
     stateEstimatorEnqueuePosition(&ext_pos);
 #endif
