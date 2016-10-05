@@ -1,4 +1,10 @@
-/* Vehicle attitude and rate params */
+// Math constants {{{
+#define DEG_TO_RAD (PI/180.0f)
+#define RAD_TO_DEG (180.0f/PI)
+#define GRAVITY_MAGNITUDE (9.81f) // we use the magnitude such that the sign/direction is explicit in calculations
+// }}}
+
+// {{{ Vehicle attitude and rate params
 #define PID_ROLL_RATE_KP  250.0
 #define PID_ROLL_RATE_KI  500.0
 #define PID_ROLL_RATE_KD  2.5
@@ -31,8 +37,9 @@
 
 
 #define DEFAULT_PID_INTEGRATION_LIMIT  5000.0
+// }}}
 
-/* Vehicle path following params */
+// {{{ Vehicle path following params
 #define PID_X_KP  25.0
 #define PID_X_KI  0.28
 #define PID_X_KD  7.0
@@ -47,3 +54,32 @@
 
 #define THRUST_BASE 36000
 #define MAX_ROLL_PITCH_ANGLE 20
+// }}}
+
+// EKF Config and Params {{{
+#define CONTROL_TO_ACC (GRAVITY_MAGNITUDE/THRUST_BASE)
+
+#define PREDICT_RATE RATE_100_HZ // this is slower than the IMU update rate of 500Hz
+#define BARO_RATE RATE_25_HZ
+
+// the point at which the dynamics change from stationary to flying
+#define IN_FLIGHT_THRUST_THRESHOLD (GRAVITY_MAGNITUDE*0.1f)
+#define IN_FLIGHT_TIME_THRESHOLD (500)
+
+// the reversion of pitch and roll to zero
+#define ROLLPITCH_ZERO_REVERSION (1e-3f)
+
+// The bounds on the covariance, these shouldn't be hit, but sometimes are... why?
+#define MAX_COVARIANCE (100)
+#define MIN_COVARIANCE (1e-6)
+
+// The bounds on states, these shouldn't be hit...
+#define MAX_POSITION (10) //meters
+#define MAX_VELOCITY (10) //meters per second
+
+// UWB params
+#define METERS_PER_TDOATICK (4.691763979e-3f)
+#define SECONDS_PER_TDOATICK (15.650040064e-12f)
+// }}}
+
+// vim:foldmethod=marker:foldlevel=0

@@ -40,7 +40,7 @@
       pages   = {1730-1736},
       doi     = {10.1109/ICRA.2015.7139421},
       ISSN    = {1050-4729}}
-      
+
       @PHDTHESIS {Mueller2016,
       author  = {Mueller, M. W.},
       title   = {Increased autonomy for quadrocopter systems: trajectory generation, fail-safe strategies, and state-estimation},

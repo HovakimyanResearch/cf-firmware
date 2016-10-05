@@ -141,48 +141,6 @@ static inline bool stateEstimatorHasTDOAPacket(tdoaMeasurement_t *uwb) {
   return (pdTRUE == xQueueReceive(tdoaDataQueue, uwb, 0));
 }
 
-
-/**
- * Constants used in the estimator
- */
-
-#define DEG_TO_RAD (PI/180.0f)
-#define RAD_TO_DEG (180.0f/PI)
-
-#define GRAVITY_MAGNITUDE (9.81f) // we use the magnitude such that the sign/direction is explicit in calculations
-#define CRAZYFLIE_WEIGHT_grams (27.0f)
-
-//thrust is thrust mapped for 65536 <==> 60 GRAMS!
-#define CONTROL_TO_ACC (GRAVITY_MAGNITUDE*60.0f/CRAZYFLIE_WEIGHT_grams/65536.0f)
-
-#define SPEED_OF_LIGHT (299792458)
-
-// TODO: Decouple the TDOA implementation from the Kalman filter...
-#define METERS_PER_TDOATICK (4.691763979e-3f)
-#define SECONDS_PER_TDOATICK (15.650040064e-12f)
-
-
-/**
- * Tuning parameters
- */
-#define PREDICT_RATE RATE_100_HZ // this is slower than the IMU update rate of 500Hz
-#define BARO_RATE RATE_25_HZ
-
-// the point at which the dynamics change from stationary to flying
-#define IN_FLIGHT_THRUST_THRESHOLD (GRAVITY_MAGNITUDE*0.1f)
-#define IN_FLIGHT_TIME_THRESHOLD (500)
-
-// the reversion of pitch and roll to zero
-#define ROLLPITCH_ZERO_REVERSION (1e-3f)
-
-// The bounds on the covariance, these shouldn't be hit, but sometimes are... why?
-#define MAX_COVARIANCE (100)
-#define MIN_COVARIANCE (1e-6)
-
-// The bounds on states, these shouldn't be hit...
-#define MAX_POSITION (10) //meters
-#define MAX_VELOCITY (10) //meters per second
-
 // Initial variances, uncertain of position, but know we're stationary and roughly flat
 static const float stdDevInitialPosition_xy = 100;
 static const float stdDevInitialPosition_z = 1;
@@ -648,12 +606,12 @@ static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, fl
     float dx = S[STATE_PX] * dt + acc->x * dt2 / 2.0f;
     float dy = S[STATE_PY] * dt + acc->y * dt2 / 2.0f;
     float dz = S[STATE_PZ] * dt + acc->z * dt2 / 2.0f; // thrust can only be produced in the body's Z direction
-  
+
     // position update
     S[STATE_X] += R[0][0] * dx + R[0][1] * dy + R[0][2] * dz;
     S[STATE_Y] += R[1][0] * dx + R[1][1] * dy + R[1][2] * dz;
     S[STATE_Z] += R[2][0] * dx + R[2][1] * dy + R[2][2] * dz - GRAVITY_MAGNITUDE * dt2 / 2.0f;
-  
+
     // body-velocity update: accelerometers + gyros cross velocity - gravity in body frame
     S[STATE_PX] += dt * (acc->x + gyro->z * S[STATE_PY] - gyro->y * S[STATE_PZ] - GRAVITY_MAGNITUDE * R[2][0]);
     S[STATE_PY] += dt * (acc->y + gyro->z * S[STATE_PX] + gyro->x * S[STATE_PZ] - GRAVITY_MAGNITUDE * R[2][1]);
