@@ -67,6 +67,7 @@
 #include "queue.h"
 #include "task.h"
 #include "sensors.h"
+#include "vehicle_params.h"
 
 #include "log.h"
 #include "param.h"
