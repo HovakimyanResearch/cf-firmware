@@ -77,6 +77,9 @@
 #define MAX_POSITION (10) //meters
 #define MAX_VELOCITY (10) //meters per second
 
+// External std deviation default
+#define EXT_MEAS_STD_DEV 0.01
+
 // UWB params
 #define METERS_PER_TDOATICK (4.691763979e-3f)
 #define SECONDS_PER_TDOATICK (15.650040064e-12f)
