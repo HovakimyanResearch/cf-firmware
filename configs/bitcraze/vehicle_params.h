@@ -4,7 +4,7 @@
 #define GRAVITY_MAGNITUDE (9.81f) // we use the magnitude such that the sign/direction is explicit in calculations
 // }}}
 
-// {{{ Vehicle attitude and rate params
+// Vehicle attitude and rate params {{{
 #define PID_ROLL_RATE_KP  250.0
 #define PID_ROLL_RATE_KI  500.0
 #define PID_ROLL_RATE_KD  2.5
@@ -39,7 +39,7 @@
 #define DEFAULT_PID_INTEGRATION_LIMIT  5000.0
 // }}}
 
-// {{{ Vehicle path following params
+// Vehicle path following params {{{
 #define PID_X_KP  25.0
 #define PID_X_KI  0.28
 #define PID_X_KD  7.0
