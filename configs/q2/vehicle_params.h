@@ -15,8 +15,8 @@
 #define PID_PITCH_RATE_KD  0.0
 #define PID_PITCH_RATE_INTEGRATION_LIMIT   33.3
 
-#define PID_YAW_RATE_KP  50.0
-#define PID_YAW_RATE_KI  5.0
+#define PID_YAW_RATE_KP  100.0
+#define PID_YAW_RATE_KI  0.0
 #define PID_YAW_RATE_KD  0.0
 #define PID_YAW_RATE_INTEGRATION_LIMIT     166.7
 
@@ -40,19 +40,19 @@
 // }}}
 
 // Vehicle path following params {{{
-#define PID_X_KP  10.0
-#define PID_X_KI  0.05
-#define PID_X_KD  5.0
+#define PID_X_KP  15.0
+#define PID_X_KI  0.2
+#define PID_X_KD  10.0
 
-#define PID_Y_KP  10.0
-#define PID_Y_KI  0.05
-#define PID_Y_KD  5.0
+#define PID_Y_KP  15.0
+#define PID_Y_KI  0.2
+#define PID_Y_KD  10.0
 
-#define PID_Z_KP  3000.0
-#define PID_Z_KI  10.0
-#define PID_Z_KD  1000.0
+#define PID_Z_KP  12000.0
+#define PID_Z_KI  1500.0
+#define PID_Z_KD  6000.0
 
-#define THRUST_BASE 23000
+#define THRUST_BASE 30000
 #define MAX_ROLL_PITCH_ANGLE 10
 // }}}
 
